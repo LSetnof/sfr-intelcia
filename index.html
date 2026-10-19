@@ -1,0 +1,492 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SFR e Intelcia: o que se sabe</title>
+<meta name="description" content="A venda da SFR explicada em linguagem simples: quem compra, quando fica fechada e o que pode acontecer à Intelcia.">
+<style>
+:root{
+  --bg:#f6f7fb; --card:#ffffff; --text:#1b2030; --muted:#5d6579; --line:#e3e6ef;
+  --accent:#4f46e5; --accent-soft:#eceafd;
+  --bouygues:#1f6feb; --free:#d93a3a; --orange:#f58a00;
+  --ok:#16a34a; --warn:#d97706; --bad:#dc2626;
+  --shadow:0 6px 24px rgba(20,25,50,.07);
+  --radius:16px;
+}
+:root[data-theme="dark"]{
+  --bg:#0f1220; --card:#181c2f; --text:#eceefa; --muted:#a2a9c3; --line:#2a3050;
+  --accent:#8b83ff; --accent-soft:#25274a;
+  --shadow:0 6px 24px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font:17px/1.65 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:var(--accent)}
+.wrap{max-width:900px;margin:0 auto;padding:0 18px}
+#progress{position:fixed;top:0;left:0;height:4px;width:0;background:linear-gradient(90deg,var(--bouygues),var(--free),var(--orange));z-index:50}
+.topbar{display:flex;justify-content:flex-end;padding:14px 0 0}
+.theme-btn{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:999px;padding:8px 14px;font:inherit;font-size:14px;cursor:pointer}
+header.hero{padding:26px 0 8px}
+.eyebrow{display:inline-block;background:var(--accent-soft);color:var(--accent);font-weight:600;font-size:13px;padding:5px 12px;border-radius:999px;letter-spacing:.02em}
+h1{font-size:clamp(30px,6vw,46px);line-height:1.12;margin:14px 0 10px;letter-spacing:-.02em}
+.lead{font-size:19px;color:var(--muted);max-width:660px;margin:0 0 16px}
+.updated{font-size:14px;color:var(--muted)}
+.status{display:flex;gap:12px;align-items:flex-start;background:var(--card);border:1px solid var(--line);border-left:6px solid var(--warn);border-radius:var(--radius);padding:16px 18px;margin:22px 0;box-shadow:var(--shadow)}
+.status b{display:block;font-size:18px}
+.dot{width:12px;height:12px;border-radius:50%;background:var(--warn);margin-top:8px;flex:none;animation:pulse 1.8s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(217,119,6,.5)}70%{box-shadow:0 0 0 12px rgba(217,119,6,0)}100%{box-shadow:0 0 0 0 rgba(217,119,6,0)}}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin:8px 0 6px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
+.stat .n{font-size:34px;font-weight:800;letter-spacing:-.02em;line-height:1.1}
+.stat .l{color:var(--muted);font-size:15px;margin-top:4px}
+
+nav.tabs{position:sticky;top:0;z-index:40;background:var(--bg);padding:14px 0 10px;margin-top:22px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+nav.tabs::-webkit-scrollbar{display:none}
+.tab{flex:none;border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:999px;padding:9px 16px;font:inherit;font-size:15px;cursor:pointer;transition:.15s}
+.tab:hover{border-color:var(--accent)}
+.tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+section.panel{display:none;animation:fade .3s ease}
+section.panel.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+h2{font-size:28px;margin:18px 0 8px;letter-spacing:-.01em}
+h3{font-size:20px;margin:22px 0 6px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);margin:14px 0}
+.muted{color:var(--muted)}
+.tag{display:inline-block;font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px;letter-spacing:.03em;text-transform:uppercase}
+.tag.fact{background:#dcfce7;color:#166534}
+.tag.analysis{background:#fef3c7;color:#92400e}
+:root[data-theme="dark"] .tag.fact{background:#123524;color:#86efac}
+:root[data-theme="dark"] .tag.analysis{background:#3b2a0b;color:#fcd34d}
+
+/* stepper */
+.stepper{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:16px 0 4px;counter-reset:s}
+.step{position:relative;text-align:center;font-size:13px;color:var(--muted);padding-top:34px}
+.step::before{counter-increment:s;content:counter(s);position:absolute;top:0;left:50%;transform:translateX(-50%);width:28px;height:28px;border-radius:50%;background:var(--line);color:var(--muted);display:grid;place-items:center;font-weight:700;font-size:14px;z-index:1}
+.step::after{content:"";position:absolute;top:13px;left:calc(-50% + 14px);width:calc(100% - 28px);height:3px;background:var(--line)}
+.step:first-child::after{display:none}
+.step.done::before{background:var(--ok);color:#fff;content:"✓"}
+.step.done::after{background:var(--ok)}
+.step.now::before{background:var(--warn);color:#fff;animation:pulse 1.8s infinite}
+.step.now::after{background:var(--ok)}
+.step.now{color:var(--text);font-weight:600}
+.step small{display:block;font-weight:400;color:var(--muted)}
+
+/* timeline */
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 4px}
+.chip{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:999px;padding:7px 14px;font:inherit;font-size:14px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--text);color:var(--bg);border-color:var(--text)}
+.timeline{list-style:none;margin:16px 0;padding:0 0 0 22px;border-left:3px solid var(--line)}
+.ev{position:relative;margin:0 0 14px;padding:0}
+.ev::before{content:"";position:absolute;left:-31px;top:18px;width:14px;height:14px;border-radius:50%;background:var(--ok);border:3px solid var(--bg)}
+.ev.future::before{background:var(--card);border:3px solid var(--warn)}
+.ev button{all:unset;display:block;width:100%;box-sizing:border-box;cursor:pointer;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow)}
+.ev button:focus-visible{outline:3px solid var(--accent)}
+.ev .d{font-size:13px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.03em}
+.ev .t{font-weight:600;display:block}
+.ev .more{display:none;color:var(--muted);font-size:15px;margin-top:8px}
+.ev.open .more{display:block}
+.ev .hint{float:right;color:var(--muted);font-size:20px;line-height:1;transition:.2s}
+.ev.open .hint{transform:rotate(45deg)}
+.ev.hide{display:none}
+
+/* buyers */
+.bar{display:flex;height:46px;border-radius:12px;overflow:hidden;margin:12px 0;box-shadow:var(--shadow)}
+.seg{display:grid;place-items:center;color:#fff;font-weight:700;font-size:15px;cursor:pointer;border:0;transition:flex .4s ease,filter .2s;padding:0}
+.seg:hover{filter:brightness(1.1)}
+.seg.b{background:var(--bouygues)} .seg.f{background:var(--free)} .seg.o{background:var(--orange)}
+.buyers{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.buyer{background:var(--card);border:2px solid var(--line);border-radius:var(--radius);padding:18px;cursor:pointer;text-align:left;font:inherit;color:var(--text);transition:.2s}
+.buyer:hover{transform:translateY(-2px)}
+.buyer.sel{box-shadow:var(--shadow)}
+.buyer.b.sel{border-color:var(--bouygues)} .buyer.f.sel{border-color:var(--free)} .buyer.o.sel{border-color:var(--orange)}
+.buyer .pct{font-size:30px;font-weight:800}
+.buyer.b .pct{color:var(--bouygues)} .buyer.f .pct{color:var(--free)} .buyer.o .pct{color:var(--orange)}
+.buyer ul{margin:8px 0 0;padding-left:18px;color:var(--muted);font-size:15px}
+.buyer .details{display:none}
+.buyer.sel .details{display:block}
+
+/* intelcia */
+.meter{height:22px;background:var(--line);border-radius:999px;overflow:hidden;margin:10px 0}
+.meter>i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),#a78bfa);border-radius:999px;transition:width 1.2s ease}
+.risk{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:620px){.risk{grid-template-columns:1fr}.stepper{font-size:11px}.step small{display:none}}
+.risk .r{border-radius:14px;padding:16px;border:1px solid var(--line);background:var(--card)}
+.level{display:inline-block;font-weight:800;padding:3px 12px;border-radius:999px;color:#fff;font-size:14px;margin-bottom:6px}
+.level.low{background:var(--ok)} .level.high{background:var(--bad)}
+.seesaw{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 12px}
+
+/* faq */
+details{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:4px 16px;margin:10px 0;box-shadow:var(--shadow)}
+summary{cursor:pointer;font-weight:600;padding:12px 0;list-style:none;display:flex;justify-content:space-between;gap:12px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-size:22px;color:var(--accent);line-height:1;transition:.2s}
+details[open] summary::after{transform:rotate(45deg)}
+details p{margin:0 0 14px;color:var(--muted)}
+
+.watch{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.watch .w{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;box-shadow:var(--shadow)}
+.watch .w b{display:block;color:var(--accent)}
+.countdown{font-size:13px;color:var(--muted);margin-top:4px}
+
+.sources{font-size:14px;color:var(--muted)}
+.sources a{display:block;margin:5px 0;word-break:break-word}
+footer{padding:28px 0 56px;color:var(--muted);font-size:14px}
+.callout{background:var(--accent-soft);border-radius:14px;padding:14px 16px;margin:14px 0}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<div class="wrap">
+  <div class="topbar"><button class="theme-btn" id="theme" aria-label="Mudar entre tema claro e escuro">🌙 Modo escuro</button></div>
+
+  <header class="hero">
+    <span class="eyebrow">Explicado em linguagem simples</span>
+    <h1>A SFR vai ser vendida. E a Intelcia?</h1>
+    <p class="lead">Quem compra, quando fica fechado, e o que pode acontecer aos trabalhadores dos call centers. Tudo num só sítio, sem palavras difíceis.</p>
+    <div class="updated">Informação reunida a 19 de outubro de 2026.</div>
+
+    <div class="status">
+      <span class="dot"></span>
+      <div><b>Assinado, mas ainda não fechado</b>
+      <span class="muted">Em junho foi assinado um pré-acordo. Falta o contrato final e a aprovação da autoridade da concorrência.</span></div>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="n"><span data-count="20.35" data-dec="2">0</span> mil M€</div><div class="l">preço da SFR (inclui dívida)</div></div>
+      <div class="stat"><div class="n"><span data-count="18">0</span>+ meses</div><div class="l">de análise da concorrência</div></div>
+      <div class="stat"><div class="n"><span data-count="8000">0</span></div><div class="l">trabalhadores da SFR</div></div>
+      <div class="stat"><div class="n"><span data-count="9000">0</span></div><div class="l">trabalhadores da Intelcia a servir a SFR</div></div>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="Secções">
+    <button class="tab" role="tab" aria-selected="true" data-tab="resumo">Resumo</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="cronologia">Cronologia</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="compradores">Quem fica com quê</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="intelcia">Intelcia</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="portugal">Portugal</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="perguntas">Perguntas</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="datas">Datas a seguir</button>
+  </nav>
+
+  <main>
+  <!-- RESUMO -->
+  <section class="panel active" id="resumo">
+    <h2>O essencial em 1 minuto</h2>
+    <div class="card">
+      <h3 style="margin-top:0">Onde estamos</h3>
+      <div class="stepper">
+        <div class="step done">Oferta<small>Out. 2025</small></div>
+        <div class="step done">Pré-acordo<small>Jun. 2026</small></div>
+        <div class="step now">Análise<small>Agora</small></div>
+        <div class="step">Contrato final<small>2.º sem. 2026</small></div>
+        <div class="step">Fecho<small>2027 ou 2028</small></div>
+      </div>
+    </div>
+    <div class="card">
+      <ul>
+        <li><b>A SFR ainda não foi vendida.</b> Bouygues, Free e Orange assinaram um pré-acordo a 6 de junho de 2026 e vão dividir a SFR entre os três.</li>
+        <li><b>A Intelcia não foi vendida com a SFR.</b> A Altice vendeu a sua parte aos fundadores em abril de 2026.</li>
+        <li><b>Mas a Intelcia depende muito da SFR:</b> cerca de 9.000 dos seus 40.000 trabalhadores fazem atendimento a clientes da SFR.</li>
+        <li><b>Não há despedimentos anunciados</b> por causa desta venda. O risco é mais para o futuro, quando os clientes da SFR passarem para os três compradores.</li>
+        <li><b>A MEO (Portugal) não faz parte do negócio.</b></li>
+      </ul>
+    </div>
+    <div class="callout">💡 <b>Em duas frases:</b> a SFR vai ser dividida, mas só daqui a bastante tempo. A Intelcia fica de fora do negócio, mas pode perder trabalho mais tarde, e por agora ninguém sabe ao certo o que vai acontecer.</div>
+  </section>
+
+  <!-- CRONOLOGIA -->
+  <section class="panel" id="cronologia">
+    <h2>Cronologia</h2>
+    <p class="muted">Toca num acontecimento para ver mais detalhes.</p>
+    <div class="filters" role="group" aria-label="Filtrar">
+      <button class="chip" data-f="all" aria-pressed="true">Tudo</button>
+      <button class="chip" data-f="past" aria-pressed="false">Já aconteceu</button>
+      <button class="chip" data-f="future" aria-pressed="false">Ainda vem aí</button>
+    </div>
+    <ol class="timeline" id="timeline"></ol>
+  </section>
+
+  <!-- COMPRADORES -->
+  <section class="panel" id="compradores">
+    <h2>Quem fica com quê</h2>
+    <p class="muted">Os valores são aproximados. Toca numa cor para ver o que cada um leva.</p>
+    <div class="bar" id="bar">
+      <button class="seg b" data-k="b" style="flex:42">Bouygues 42%</button>
+      <button class="seg f" data-k="f" style="flex:31">Free 31%</button>
+      <button class="seg o" data-k="o" style="flex:27">Orange 27%</button>
+    </div>
+    <div class="buyers" id="buyers">
+      <button class="buyer b sel" data-k="b">
+        <div><b>Bouygues Telecom</b></div><div class="pct">~42%</div>
+        <ul class="details">
+          <li>Todos os clientes <b>empresas</b> (SFR Business)</li>
+          <li>Cerca de 3,8 milhões de clientes móveis e 2,6 milhões de clientes de internet fixa</li>
+          <li>A rede móvel da SFR nas zonas menos povoadas</li>
+        </ul>
+      </button>
+      <button class="buyer f" data-k="f">
+        <div><b>Free (Iliad)</b></div><div class="pct">~31%</div>
+        <ul class="details">
+          <li>Toda a base da <b>RED by SFR</b> (cerca de 6 milhões de clientes)</li>
+          <li>Cerca de 1,6 milhões de clientes particulares da SFR</li>
+          <li>Pequenas empresas e frequências de rede</li>
+        </ul>
+      </button>
+      <button class="buyer o" data-k="o">
+        <div><b>Orange</b></div><div class="pct">~27%</div>
+        <ul class="details">
+          <li>Parte dos clientes particulares</li>
+          <li>Cerca de 4,9 milhões de clientes de operadoras low cost (Réglo, Syma, Coriolis)</li>
+          <li>Frequências de rede</li>
+        </ul>
+      </button>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0">E nos primeiros anos?</h3>
+      <p class="muted" style="margin:0">Durante pelo menos <b>30 meses</b>, uma empresa de transição (a "SFR SA"), detida pelos três em partes iguais, gere as redes e ajuda a passar os clientes. Fica fora do negócio, entre outros, a rede de fibra XP Fibre, a Altice Technical Services (~3.200 trabalhadores), os territórios ultramarinos e a Intelcia.</p>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0">Os trabalhadores da SFR</h3>
+      <p class="muted">Cerca de <b>8.000 pessoas</b>. O grupo comprador diz que cada uma terá uma "solução de emprego".</p>
+      <div class="bar" style="height:38px">
+        <div class="seg" style="flex:5;background:var(--ok);cursor:default">~5.000 passam logo para os 3 compradores</div>
+        <div class="seg" style="flex:3;background:var(--accent);cursor:default">~3.000 ficam na SFR até 2029</div>
+      </div>
+      <p class="muted" style="margin:0">Os sindicatos acham pouco: querem mais propostas de recolocação e indemnizações mais altas. Houve greve a 24 de setembro.</p>
+    </div>
+  </section>
+
+  <!-- INTELCIA -->
+  <section class="panel" id="intelcia">
+    <h2>E a Intelcia?</h2>
+    <div class="card">
+      <h3 style="margin-top:0">Quem é</h3>
+      <p>Uma empresa de <b>call centers</b> (atendimento a clientes) com cerca de <b>40.000 trabalhadores</b> em 19 países, incluindo Marrocos, França e Portugal. Atende clientes de outras empresas, como operadoras de telecomunicações.</p>
+      <h3>Quanto depende da SFR?</h3>
+      <div class="meter"><i id="meter" data-w="22"></i></div>
+      <p class="muted" style="margin:0"><b>~9.000 de 40.000</b> trabalhadores (cerca de 22%) trabalham para a SFR, segundo o próprio CEO. Alguns jornais falam em metade da atividade, mas esse número é uma estimativa de segunda mão.</p>
+    </div>
+
+    <div class="card">
+      <span class="tag fact">Factos</span>
+      <ul>
+        <li>A Altice era dona de 65% da Intelcia desde 2016 e <b>vendeu essa parte aos fundadores</b>. O fecho foi em abril de 2026.</li>
+        <li>A Intelcia <b>ficou fora</b> da venda da SFR.</li>
+        <li>A Altice disse que a SFR "continuará a ser um grande cliente". Isto é uma intenção, sem prazo nem volumes.</li>
+        <li><b>Não há nenhum anúncio</b> de cortes ou encerramentos ligados à venda, em França, Marrocos ou Portugal.</li>
+        <li>As garantias de emprego do grupo comprador são <b>só para os trabalhadores da SFR</b>, não para os da Intelcia.</li>
+        <li>Não é público quanto tempo dura o contrato entre a SFR e a Intelcia.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <span class="tag analysis">Análise</span> <span class="muted">(opinião fundamentada, não notícia)</span>
+      <div class="seesaw" role="group" aria-label="Escolher prazo">
+        <button class="chip" data-r="short" aria-pressed="true">Curto prazo</button>
+        <button class="chip" data-r="long" aria-pressed="false">Depois da mudança dos clientes</button>
+      </div>
+      <div class="risk">
+        <div class="r" id="risk-box"></div>
+        <div class="r">
+          <b>Onde o risco é maior?</b>
+          <p class="muted" style="margin:6px 0 0">Nos centros que existem principalmente para servir a SFR, sobretudo em <b>Marrocos e em África</b> (Senegal, Camarões, Costa do Marfim). A inteligência artificial também aumenta a pressão, e o próprio CEO admitiu que vai ser preciso menos gente para o mesmo trabalho.</p>
+        </div>
+      </div>
+    </div>
+    <div class="callout">⚠️ <b>Importante:</b> sobre o que acontece à Intelcia depois da venda não há informação pública concreta. Tudo o que vá além dos factos acima é especulação.</div>
+  </section>
+
+  <!-- PORTUGAL -->
+  <section class="panel" id="portugal">
+    <h2>E em Portugal?</h2>
+    <div class="card">
+      <ul>
+        <li><b>MEO:</b> não faz parte da venda da SFR, por isso não há impacto direto conhecido.</li>
+        <li><b>Intelcia Portugal:</b> tem cerca de 7.000 trabalhadores. A saída da Altice abre-lhe a porta a outros clientes, como a NOS e a Vodafone, mas continua muito ligada à MEO.</li>
+        <li><b>Fafe:</b> o centro pode fechar, mas a razão apontada é a Câmara querer recuperar o edifício (a empresa pode lá ficar até 31 de dezembro de 2026).</li>
+        <li><b>MEO:</b> prevê cerca de 1.200 saídas por mútuo acordo até ao fim do ano.</li>
+      </ul>
+    </div>
+    <div class="callout">📌 Segundo as fontes consultadas, <b>nenhuma</b> destas situações está ligada à venda da SFR. É importante não misturar as notícias.</div>
+  </section>
+
+  <!-- PERGUNTAS -->
+  <section class="panel" id="perguntas">
+    <h2>Perguntas frequentes</h2>
+    <details><summary>A SFR já foi vendida?</summary><p>Ainda não. Há um pré-acordo assinado a 6 de junho de 2026, mas falta o contrato final e a aprovação da autoridade da concorrência. O pré-acordo prevê indemnizações entre 0,1 e 2 mil milhões de euros se alguém desistir.</p></details>
+    <details><summary>Porque é que demora tanto?</summary><p>Hoje há 4 grandes operadoras em França. Depois da venda ficam 3. Quando o número de concorrentes diminui, as autoridades analisam com muito cuidado, para garantir que os preços não sobem. A análise vai durar pelo menos 18 meses.</p></details>
+    <details><summary>A Intelcia foi vendida com a SFR?</summary><p>Não. A Altice vendeu a sua parte aos fundadores da Intelcia em abril de 2026, e isso foi um negócio à parte.</p></details>
+    <details><summary>Vai haver despedimentos na Intelcia?</summary><p>Por agora, não há nada anunciado. O risco principal é mais para a frente, quando os clientes da SFR passarem para a Bouygues, a Free e a Orange. A Intelcia vai ter de conseguir contratos com eles para manter o trabalho, e isso não está garantido.</p></details>
+    <details><summary>Os clientes da SFR vão ter de mudar de operadora?</summary><p>Vão ser passados para um dos três compradores, mas isso só acontece depois do negócio ser aprovado. Durante pelo menos 30 meses, a empresa de transição ajuda a fazer essa passagem.</p></details>
+    <details><summary>Quando é que isto fica fechado?</summary><p>Os compradores apontam para o segundo semestre de 2027. Pelo calendário da análise, o mais provável é só em 2028.</p></details>
+    <details><summary>A MEO e os clientes portugueses são afetados?</summary><p>Não há impacto direto conhecido. A MEO não faz parte do negócio.</p></details>
+    <details><summary>Tudo isto é certo?</summary><p>Não. O pré-acordo pode cair, as condições podem mudar e a autoridade pode exigir alterações. Esta página mostra o que se sabe até hoje.</p></details>
+  </section>
+
+  <!-- DATAS -->
+  <section class="panel" id="datas">
+    <h2>Datas a acompanhar</h2>
+    <div class="watch" id="watch"></div>
+    <div class="card" style="margin-top:18px">
+      <h3 style="margin-top:0">Fontes</h3>
+      <div class="sources">
+        <a href="https://www.orange.com/en/press-release/signature-dun-protocole-daccord-en-vue-de-lacquisition-de-sfr-476232-476232" target="_blank" rel="noopener">Orange: comunicado do pré-acordo (6 jun. 2026)</a>
+        <a href="https://www.cnbc.com/2026/06/06/bouygues-led-consortium-signs-23point44-billion-deal-to-buy-sfr-from-altice-france.html" target="_blank" rel="noopener">CNBC: acordo para comprar a SFR</a>
+        <a href="https://www.bloomberg.com/news/articles/2026-06-06/french-carriers-in-20-4-billion-deal-to-buy-altice-france-s-sfr" target="_blank" rel="noopener">Bloomberg: acordo das operadoras francesas</a>
+        <a href="https://www.generation-nt.com/actualites/rachat-sfr-autorite-concurrence-telecom-free-orange-2078680" target="_blank" rel="noopener">Generation NT: análise pela Autorité de la concurrence</a>
+        <a href="https://next.ink/241434/faq-rachat-de-sfr-toutes-les-reponses-a-vos-questions-et-inquietudes/" target="_blank" rel="noopener">Next: perguntas e respostas sobre a compra da SFR</a>
+        <a href="https://medias24.com/2026/04/29/intelcia-closing-du-rachat-des-parts-daltice-1668237/" target="_blank" rel="noopener">Médias24: fecho da compra das ações da Altice na Intelcia</a>
+        <a href="https://medias24.com/2026/04/26/intelcia-karim-bernoussi-et-ses-partenaires-reprennent-100-du-capital-sortie-daltice-1666045/" target="_blank" rel="noopener">Médias24: entrevista ao CEO da Intelcia</a>
+        <a href="https://www.universfreebox.com/article/597150/sfr-les-syndicats-appellent-a-la-greve-les-propositions-de-free-orange-et-bouygues-jugees-insuffisantes" target="_blank" rel="noopener">Univers Freebox: sindicatos e greve</a>
+        <a href="https://www.publico.pt/2026/06/13/economia/noticia/meo-abre-porta-saida-1200-trabalhadores-ate-fim-ano-2177901" target="_blank" rel="noopener">Público: MEO e as 1.200 saídas</a>
+        <a href="https://www.jn.pt/pais/artigo/empresa-intelcia-pode-ficar-ate-31-de-dezembro-no-edificio-da-camara-de-fafe/18094099" target="_blank" rel="noopener">JN: Intelcia e o edifício em Fafe</a>
+        <a href="https://sinttav.pt/en/2026/05/11/centros-de-contacto-da-intelcia-a-encerrar/" target="_blank" rel="noopener">SINTTAV: centros de contacto da Intelcia</a>
+      </div>
+    </div>
+  </section>
+  </main>
+
+  <footer>
+    Resumo informal feito a partir de notícias e comunicados oficiais, com apoio de IA. Não é aconselhamento jurídico, laboral ou financeiro. Confirma sempre nas fontes antes de tomar decisões.
+  </footer>
+</div>
+
+<script>
+(function(){
+  var $=function(s,r){return (r||document).querySelector(s)};
+  var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+  var today=new Date();
+
+  /* tema */
+  var root=document.documentElement, btn=$('#theme');
+  function setTheme(t){
+    root.setAttribute('data-theme',t);
+    btn.textContent=t==='dark'?'☀️ Modo claro':'🌙 Modo escuro';
+  }
+  var pref=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+  try{pref=localStorage.getItem('tema')||pref}catch(e){}
+  setTheme(pref);
+  btn.addEventListener('click',function(){
+    var t=root.getAttribute('data-theme')==='dark'?'light':'dark';
+    setTheme(t); try{localStorage.setItem('tema',t)}catch(e){}
+  });
+
+  /* barra de progresso de leitura */
+  var prog=$('#progress');
+  function onScroll(){
+    var h=document.documentElement.scrollHeight-innerHeight;
+    prog.style.width=(h>0?Math.min(100,scrollY/h*100):0)+'%';
+  }
+  addEventListener('scroll',onScroll,{passive:true}); onScroll();
+
+  /* separadores */
+  var tabs=$$('.tab'), panels=$$('.panel');
+  function showTab(id,push){
+    tabs.forEach(function(t){t.setAttribute('aria-selected',t.dataset.tab===id)});
+    panels.forEach(function(p){p.classList.toggle('active',p.id===id)});
+    if(id==='intelcia'){setTimeout(function(){var m=$('#meter');m.style.width=m.dataset.w+'%'},100)}
+    if(push){try{history.replaceState(null,'','#'+id)}catch(e){}}
+    var nav=$('nav.tabs'); if(nav&&push){window.scrollTo({top:nav.offsetTop-4,behavior:'smooth'})}
+  }
+  tabs.forEach(function(t){t.addEventListener('click',function(){showTab(t.dataset.tab,true)})});
+  var h=(location.hash||'').slice(1);
+  if(h&&$('#'+h)&&$('#'+h).classList.contains('panel')) showTab(h,false);
+
+  /* contadores */
+  function animate(el){
+    var end=parseFloat(el.dataset.count), dec=parseInt(el.dataset.dec||'0',10), t0=null, dur=1400;
+    function fmt(v){return v.toLocaleString('pt-PT',{minimumFractionDigits:dec,maximumFractionDigits:dec})}
+    function step(ts){
+      if(!t0)t0=ts; var p=Math.min(1,(ts-t0)/dur), e=1-Math.pow(1-p,3);
+      el.textContent=fmt(end*e); if(p<1)requestAnimationFrame(step); else el.textContent=fmt(end);
+    }
+    requestAnimationFrame(step);
+  }
+  var counters=$$('[data-count]');
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){animate(e.target);io.unobserve(e.target)}})},{threshold:.4});
+    counters.forEach(function(c){io.observe(c)});
+  } else counters.forEach(animate);
+
+  /* cronologia */
+  var events=[
+    {d:'2025-08-01',l:'Ago.–dez. 2025',t:'A Altice France reduz a sua dívida',m:'A empresa reestrutura a dívida (menos mais de 8 mil milhões de euros). O plano é validado pelo tribunal de recurso de Paris a 11 de dezembro de 2025.'},
+    {d:'2025-10-15',l:'14–15 out. 2025',t:'Primeira oferta: 17 mil milhões de euros',m:'Bouygues, Free e Orange apresentam uma oferta conjunta. O dono da Altice, Patrick Drahi, recusa.'},
+    {d:'2025-11-24',l:'24 nov. 2025',t:'A Altice decide vender a Intelcia',m:'A Altice assina a venda dos seus 65% da Intelcia aos fundadores da empresa.'},
+    {d:'2026-04-17',l:'17 abr. 2026',t:'Nova oferta: 20,35 mil milhões de euros',m:'Começam negociações exclusivas, que são prolongadas até 5 de junho.'},
+    {d:'2026-04-29',l:'28–29 abr. 2026',t:'Fecho da venda da Intelcia aos fundadores',m:'A Intelcia passa a ser 100% detida pela gestão. O preço não foi divulgado.'},
+    {d:'2026-06-06',l:'6 jun. 2026',t:'Assinado o pré-acordo da venda da SFR',m:'Bouygues, Free e Orange assinam um protocolo de acordo com a Altice France. Ainda não é o contrato final.'},
+    {d:'2026-07-15',l:'15 jul. 2026',t:'A análise passa para a autoridade francesa',m:'A Comissão Europeia entrega o caso à Autorité de la concurrence, que anuncia uma análise de pelo menos 18 meses.'},
+    {d:'2026-09-24',l:'24 set. 2026',t:'Greve dos trabalhadores da SFR',m:'Os sindicatos CFDT, CFTC e Unsa convocam greve. Segundo as contagens dos sindicatos, houve entre 2.660 e 3.500 grevistas.'},
+    {d:'2026-10-16',l:'16 out. 2026',t:'Retoma das negociações com os sindicatos',m:'O grupo comprador apresenta uma nova proposta. O conteúdo não foi divulgado.'},
+    {d:'2026-10-26',l:'26 out. 2026',t:'Decisão do tribunal de Paris',m:'Está prevista a decisão sobre o pedido dos representantes dos trabalhadores para obter documentos e travar o processo.'},
+    {d:'2026-12-05',l:'Início de dez. 2026',t:'Audiências do processo principal',m:'Os representantes dos trabalhadores levam o caso a tribunal. Primeiras audiências previstas para o início de dezembro.'},
+    {d:'2026-12-31',l:'2.º semestre 2026',t:'Contrato final',m:'Data esperada para a assinatura dos documentos jurídicos definitivos da venda.'},
+    {d:'2027-12-31',l:'2.º semestre 2027',t:'Fecho do negócio (objetivo dos compradores)',m:'É a data apontada pelos compradores, mas parece otimista, porque a análise da concorrência dura pelo menos 18 meses.'},
+    {d:'2028-03-01',l:'2028',t:'Fecho do negócio (mais provável)',m:'Pelo calendário da análise, a decisão da autoridade dificilmente chega antes do início de 2028.'}
+  ];
+  var tl=$('#timeline');
+  events.forEach(function(e){
+    var future=new Date(e.d)>today;
+    var li=document.createElement('li');
+    li.className='ev'+(future?' future':'');
+    li.dataset.state=future?'future':'past';
+    li.innerHTML='<button aria-expanded="false"><span class="hint">+</span><span class="d">'+e.l+'</span><span class="t">'+e.t+'</span><span class="more">'+e.m+'</span></button>';
+    li.firstChild.addEventListener('click',function(){
+      var open=li.classList.toggle('open'); this.setAttribute('aria-expanded',open);
+    });
+    tl.appendChild(li);
+  });
+  $$('.chip[data-f]').forEach(function(c){
+    c.addEventListener('click',function(){
+      $$('.chip[data-f]').forEach(function(x){x.setAttribute('aria-pressed',x===c)});
+      var f=c.dataset.f;
+      $$('.ev').forEach(function(ev){ev.classList.toggle('hide',f!=='all'&&ev.dataset.state!==f)});
+    });
+  });
+
+  /* compradores */
+  function pick(k){
+    $$('.buyer').forEach(function(b){b.classList.toggle('sel',b.dataset.k===k)});
+    $$('.seg[data-k]').forEach(function(s){s.style.flex=(s.dataset.k===k?'55':({b:42,f:31,o:27}[s.dataset.k]))});
+  }
+  $$('.buyer,.seg[data-k]').forEach(function(el){el.addEventListener('click',function(){pick(el.dataset.k)})});
+
+  /* risco Intelcia */
+  var risks={
+    short:{c:'low',n:'BAIXO',t:'Até ao fecho do negócio (2027 ou 2028) a SFR continua a funcionar e precisa de atendimento ao cliente. A fase de transição de pelo menos 30 meses também ajuda a manter o trabalho.'},
+    long:{c:'high',n:'ELEVADO',t:'Quando os clientes passarem para a Bouygues, a Free e a Orange, o contrato com a SFR deixa de existir como é hoje. A Intelcia só mantém o trabalho se ganhar contratos com os novos donos, algo que já pode tentar, mas que não é garantido.'}
+  };
+  function setRisk(k){
+    var r=risks[k];
+    $('#risk-box').innerHTML='<span class="level '+r.c+'">Risco '+r.n+'</span><p class="muted" style="margin:6px 0 0">'+r.t+'</p>';
+    $$('.chip[data-r]').forEach(function(c){c.setAttribute('aria-pressed',c.dataset.r===k)});
+  }
+  $$('.chip[data-r]').forEach(function(c){c.addEventListener('click',function(){setRisk(c.dataset.r)})});
+  setRisk('short');
+
+  /* datas a seguir */
+  var watch=[
+    {d:'2026-10-26',t:'Decisão do tribunal de Paris',x:'Sobre o pedido dos representantes dos trabalhadores da SFR.'},
+    {d:'2026-12-31',t:'Contrato final da venda',x:'Esperado no segundo semestre de 2026.'},
+    {d:'2028-03-01',t:'Decisão da autoridade da concorrência',x:'A análise dura pelo menos 18 meses; 2028 é o mais provável.'}
+  ];
+  var w=$('#watch');
+  watch.forEach(function(e){
+    var days=Math.ceil((new Date(e.d)-today)/86400000), txt;
+    if(days>1) txt='Faltam cerca de '+days+' dias';
+    else if(days===1) txt='É amanhã';
+    else if(days===0) txt='É hoje';
+    else txt='Já passou, vê se há novidades';
+    var div=document.createElement('div'); div.className='w';
+    div.innerHTML='<b>'+e.t+'</b><span class="muted">'+e.x+'</span><div class="countdown">⏳ '+txt+'</div>';
+    w.appendChild(div);
+  });
+})();
+</script>
+</body>
+</html>
